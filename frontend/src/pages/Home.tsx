@@ -1,3 +1,16 @@
+/**
+ * Main (and only) page — orchestrates the entire download workflow.
+ *
+ * Uses a simple state machine with 5 phases:
+ *   idle → extracting → selecting → downloading → done
+ *
+ * Each phase shows different components:
+ *   idle/extracting: UrlInput (paste a URL)
+ *   selecting:       VideoPreview + FormatSelector + DownloadButton
+ *   downloading:     DownloadCard with live progress bar
+ *   done:            DownloadCard with "Save to PC" button
+ */
+
 import { useEffect, useRef, useState } from "react";
 import type { DownloadRecord } from "../types";
 import { startDownload } from "../api/client";
@@ -20,10 +33,12 @@ export function Home() {
   const [downloadLoading, setDownloadLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Subscribe to real-time progress updates via SSE (only while downloading)
   const progress = useDownloadProgress(
     activeDownload && phase === "downloading" ? activeDownload.id : null
   );
 
+  // Move to "done" phase when SSE reports completed or failed
   const prevProgressStatus = useRef<string | undefined>(undefined);
   useEffect(() => {
     if (!progress) return;
@@ -38,6 +53,7 @@ export function Home() {
     }
   }, [progress, phase]);
 
+  // Step 1: User submits a URL → extract video metadata
   const handleExtract = async (url: string) => {
     setPhase("extracting");
     setError(null);
@@ -47,6 +63,7 @@ export function Home() {
     setPhase("selecting");
   };
 
+  // Step 2: User picks a format and clicks Download → start the Celery task
   const handleDownload = async () => {
     if (!videoInfo || !selectedFormat) return;
     setDownloadLoading(true);
@@ -62,6 +79,7 @@ export function Home() {
     }
   };
 
+  // Step 3: After saving, reset everything so the user can download another video
   const handleNewDownload = () => {
     reset();
     setPhase("idle");

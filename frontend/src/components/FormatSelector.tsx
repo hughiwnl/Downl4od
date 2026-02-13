@@ -1,9 +1,15 @@
+/**
+ * Dropdown for picking a video quality/format.
+ * Formats are grouped into "Video" and "Audio Only" sections.
+ * Each option shows the quality label, file extension, and estimated size.
+ */
+
 import type { FormatInfo } from "../types";
 
 interface Props {
-  formats: FormatInfo[];
-  selected: string | null;
-  onSelect: (formatId: string) => void;
+  formats: FormatInfo[];                  // available formats from extraction
+  selected: string | null;               // currently selected format_id
+  onSelect: (formatId: string) => void;  // called when user picks a format
 }
 
 function formatFileSize(bytes: number | null): string {

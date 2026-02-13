@@ -1,7 +1,9 @@
+/** Big "Download" button that starts the download. Disabled until a format is selected. */
+
 interface Props {
   onClick: () => void;
-  disabled: boolean;
-  loading: boolean;
+  disabled: boolean;  // true when no format is selected
+  loading: boolean;   // true while the download request is being sent
 }
 
 export function DownloadButton({ onClick, disabled, loading }: Props) {

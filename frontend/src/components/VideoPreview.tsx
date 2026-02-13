@@ -1,9 +1,15 @@
+/**
+ * Shows a preview card with the video's thumbnail, title, uploader, and duration.
+ * Displayed after the user submits a URL and extraction succeeds.
+ */
+
 import type { VideoInfo } from "../types";
 
 interface Props {
   video: VideoInfo;
 }
 
+/** Convert seconds to h:mm:ss or m:ss format. */
 function formatDuration(seconds: number): string {
   const h = Math.floor(seconds / 3600);
   const m = Math.floor((seconds % 3600) / 60);

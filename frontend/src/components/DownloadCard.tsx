@@ -1,11 +1,19 @@
+/**
+ * Shows the current state of a download — title, status badge, progress bar,
+ * speed/ETA, and a "Save to PC" button when complete.
+ *
+ * After the user clicks "Save to PC", the file is downloaded via the browser
+ * and onSaved is called to redirect back to the front page.
+ */
+
 import type { DownloadRecord, ProgressEvent } from "../types";
 import { ProgressBar } from "./ProgressBar";
 import { getFileUrl } from "../api/client";
 
 interface Props {
-  download: DownloadRecord;
-  progress?: ProgressEvent | null;
-  onSaved: () => void;
+  download: DownloadRecord;              // job state from the backend
+  progress?: ProgressEvent | null;       // real-time SSE progress data
+  onSaved: () => void;                   // called after user saves the file — resets to front page
 }
 
 function formatSpeed(bytesPerSec: number | undefined): string {

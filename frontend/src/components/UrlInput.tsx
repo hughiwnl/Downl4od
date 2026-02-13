@@ -1,8 +1,13 @@
+/**
+ * URL input form — the first thing the user sees.
+ * User pastes a video URL and clicks "Get Video" to extract metadata.
+ */
+
 import { useState } from "react";
 
 interface Props {
-  onSubmit: (url: string) => void;
-  loading: boolean;
+  onSubmit: (url: string) => void;  // called with the URL when the form is submitted
+  loading: boolean;                  // true while extracting — disables the form
 }
 
 export function UrlInput({ onSubmit, loading }: Props) {
