@@ -5,6 +5,7 @@ import { getFileUrl } from "../api/client";
 interface Props {
   download: DownloadRecord;
   progress?: ProgressEvent | null;
+  onSaved: () => void;
 }
 
 function formatSpeed(bytesPerSec: number | undefined): string {
@@ -21,7 +22,7 @@ function formatEta(seconds: number | undefined): string {
   return `${Math.floor(seconds / 3600)}h ${Math.floor((seconds % 3600) / 60)}m`;
 }
 
-export function DownloadCard({ download, progress }: Props) {
+export function DownloadCard({ download, progress, onSaved }: Props) {
   const isActive =
     download.status === "downloading" ||
     download.status === "processing" ||
@@ -29,6 +30,19 @@ export function DownloadCard({ download, progress }: Props) {
 
   const currentProgress = progress?.progress ?? download.progress;
   const currentStatus = progress?.status ?? download.status;
+
+  const handleSave = () => {
+    // Trigger the file download via a temporary link
+    const link = document.createElement("a");
+    link.href = getFileUrl(download.id);
+    link.download = "";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // Redirect back to front page after a short delay
+    setTimeout(onSaved, 1000);
+  };
 
   return (
     <div className={`download-card ${currentStatus}`}>
@@ -63,13 +77,9 @@ export function DownloadCard({ download, progress }: Props) {
 
       {currentStatus === "completed" && (
         <div className="download-card-actions">
-          <a
-            href={getFileUrl(download.id)}
-            download
-            className="btn-primary btn-save"
-          >
+          <button onClick={handleSave} className="btn-primary btn-save">
             Save to PC
-          </a>
+          </button>
         </div>
       )}
 

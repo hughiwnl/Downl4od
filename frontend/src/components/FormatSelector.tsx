@@ -14,55 +14,48 @@ function formatFileSize(bytes: number | null): string {
   return `${(bytes / (1024 * 1024 * 1024)).toFixed(2)} GB`;
 }
 
+function formatLabel(f: FormatInfo): string {
+  const size = f.filesize_approx ? ` - ${formatFileSize(f.filesize_approx)}` : "";
+  return `${f.quality_label} (${f.ext})${size}`;
+}
+
 export function FormatSelector({ formats, selected, onSelect }: Props) {
   const videoFormats = formats.filter((f) => f.has_video);
   const audioFormats = formats.filter((f) => !f.has_video && f.has_audio);
 
   return (
     <div className="format-selector">
-      <h4>Select Format</h4>
-
-      {videoFormats.length > 0 && (
-        <div className="format-group">
-          <label className="format-group-label">Video</label>
-          {videoFormats.map((f) => (
-            <button
-              key={f.format_id}
-              className={`format-option ${selected === f.format_id ? "selected" : ""}`}
-              onClick={() => onSelect(f.format_id)}
-            >
-              <span className="format-quality">{f.quality_label}</span>
-              <span className="format-ext">{f.ext}</span>
-              {f.filesize_approx && (
-                <span className="format-size">
-                  {formatFileSize(f.filesize_approx)}
-                </span>
-              )}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {audioFormats.length > 0 && (
-        <div className="format-group">
-          <label className="format-group-label">Audio Only</label>
-          {audioFormats.map((f) => (
-            <button
-              key={f.format_id}
-              className={`format-option ${selected === f.format_id ? "selected" : ""}`}
-              onClick={() => onSelect(f.format_id)}
-            >
-              <span className="format-quality">{f.quality_label}</span>
-              <span className="format-ext">{f.ext}</span>
-              {f.filesize_approx && (
-                <span className="format-size">
-                  {formatFileSize(f.filesize_approx)}
-                </span>
-              )}
-            </button>
-          ))}
-        </div>
-      )}
+      <label className="format-label" htmlFor="format-select">
+        Quality
+      </label>
+      <select
+        id="format-select"
+        className="format-dropdown"
+        value={selected || ""}
+        onChange={(e) => onSelect(e.target.value)}
+      >
+        <option value="" disabled>
+          Select quality...
+        </option>
+        {videoFormats.length > 0 && (
+          <optgroup label="Video">
+            {videoFormats.map((f) => (
+              <option key={f.format_id} value={f.format_id}>
+                {formatLabel(f)}
+              </option>
+            ))}
+          </optgroup>
+        )}
+        {audioFormats.length > 0 && (
+          <optgroup label="Audio Only">
+            {audioFormats.map((f) => (
+              <option key={f.format_id} value={f.format_id}>
+                {formatLabel(f)}
+              </option>
+            ))}
+          </optgroup>
+        )}
+      </select>
     </div>
   );
 }

@@ -106,12 +106,8 @@ export function Home() {
             <DownloadCard
               download={activeDownload}
               progress={progress}
+              onSaved={handleNewDownload}
             />
-            {phase === "done" && (
-              <button className="btn-secondary btn-new" onClick={handleNewDownload}>
-                Download Another
-              </button>
-            )}
           </div>
         )}
       </main>
