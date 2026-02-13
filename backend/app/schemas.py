@@ -27,6 +27,7 @@ class FormatInfo(BaseModel):
     format_id: str                         # yt-dlp's internal format identifier
     ext: str                               # File extension (mp4, webm, m4a, etc.)
     quality_label: str                     # Human-readable label ("1080p", "audio only")
+    height: int = 0                        # Video height in pixels (for sorting, 0 for audio)
     filesize_approx: Optional[int] = None  # Estimated file size in bytes
     has_video: bool
     has_audio: bool

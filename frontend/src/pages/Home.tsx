@@ -91,7 +91,7 @@ export function Home() {
   return (
     <div className="home">
       <header className="header">
-        <h1>DL</h1>
+        <h1>Downl4od</h1>
         <p className="subtitle">Download videos from anywhere. Nothing is tracked or stored.</p>
       </header>
 

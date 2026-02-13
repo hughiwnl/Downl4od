@@ -20,7 +20,7 @@ async def lifespan(app: FastAPI):
     yield
 
 
-app = FastAPI(title="DL - Universal Video Downloader", lifespan=lifespan)
+app = FastAPI(title="Downl4od - Universal Video Downloader", lifespan=lifespan)
 
 # Allow the frontend (running on a different port in dev) to call the API
 app.add_middleware(

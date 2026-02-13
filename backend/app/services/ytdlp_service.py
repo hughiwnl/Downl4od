@@ -54,12 +54,17 @@ def extract_info(url: str) -> VideoInfo:
                 format_id=f["format_id"],
                 ext=f.get("ext", "unknown"),
                 quality_label=label,
+                height=f.get("height", 0) if has_video else 0,
                 filesize_approx=f.get("filesize") or f.get("filesize_approx"),
                 has_video=has_video,
                 has_audio=has_audio,
                 note=f.get("format_note", ""),
             )
         )
+
+    # Sort video formats highest quality first (by height descending),
+    # audio formats by file size descending
+    formats.sort(key=lambda f: f.height or 0, reverse=True)
 
     # Always offer "Best quality" as the first option — yt-dlp picks the best
     # video + audio streams and merges them with ffmpeg
@@ -69,6 +74,7 @@ def extract_info(url: str) -> VideoInfo:
             format_id="bestvideo+bestaudio/best",
             ext="mp4",
             quality_label="Best quality",
+            height=0,
             filesize_approx=None,
             has_video=True,
             has_audio=True,

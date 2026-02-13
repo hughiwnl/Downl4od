@@ -6,6 +6,7 @@ export interface FormatInfo {
   format_id: string;
   ext: string;
   quality_label: string;
+  height: number;                // video height in pixels (for sorting, 0 for audio)
   filesize_approx: number | null;
   has_video: boolean;
   has_audio: boolean;
